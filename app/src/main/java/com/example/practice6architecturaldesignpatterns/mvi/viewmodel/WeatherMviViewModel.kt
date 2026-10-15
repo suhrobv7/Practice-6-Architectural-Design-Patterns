@@ -11,27 +11,27 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class WeatherMviViewModel(private val repository: WeatherRepository) : ViewModel() {
-    private val _state = MutableStateFlow(WeatherState())
-    val state: StateFlow<WeatherState> = _state.asStateFlow()
+class WeatherMviViewModel(private val weatherRepository: WeatherRepository) : ViewModel() {
+    private val _uiState = MutableStateFlow(WeatherState())
+    val uiState: StateFlow<WeatherState> = _uiState.asStateFlow()
 
-    fun onIntent(intent: WeatherIntent) {
+    fun processIntent(intent: WeatherIntent) {
         when (intent) {
-            is WeatherIntent.SelectCity -> load(intent.city)
+            is WeatherIntent.SelectCity -> loadWeather(intent.city)
             WeatherIntent.DismissError -> {
-                _state.update { it.copy(error = null) }
+                _uiState.update { current -> current.copy(error = null) }
             }
         }
     }
 
-    private fun load(city: String) {
-        _state.update { it.copy(isLoading = true, error = null) }
+    private fun loadWeather(city: String) {
+        _uiState.update { it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
-            val result = repository.getWeather(city)
-            result.onSuccess { weather ->
-                _state.update { it.copy(isLoading = false, weather = weather, error = null) }
-            }.onFailure { e ->
-                _state.update { it.copy(isLoading = false, error = e.message ?: "Unknown error") }
+            val res = weatherRepository.getWeather(city)
+            res.onSuccess { data ->
+                _uiState.update { it.copy(isLoading = false, weather = data, error = null) }
+            }.onFailure { err ->
+                _uiState.update { it.copy(isLoading = false, error = err.message ?: "Error") }
             }
         }
     }

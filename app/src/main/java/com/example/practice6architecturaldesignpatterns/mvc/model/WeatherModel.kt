@@ -3,23 +3,26 @@ package com.example.practice6architecturaldesignpatterns.mvc.model
 import com.example.practice6architecturaldesignpatterns.data.model.Weather
 import com.example.practice6architecturaldesignpatterns.data.repository.WeatherRepository
 
-class WeatherModel(private val repository: WeatherRepository) {
-    var isLoading: Boolean = false
+class WeatherModel(private val weatherRepo: WeatherRepository) {
+    var loading: Boolean = false
         private set
-    var weather: Weather? = null
+    var currentWeather: Weather? = null
         private set
-    var error: String? = null
+    var errorMessage: String? = null
         private set
 
-    fun startLoading() {
-        isLoading = true
-        error = null
+    fun beginLoading() {
+        loading = true
+        errorMessage = null
     }
 
-    suspend fun load(city: String) {
-        repository.getWeather(city)
-            .onSuccess { weather = it }
-            .onFailure { error = it.message ?: "Unknown error" }
-        isLoading = false
+    suspend fun fetch(city: String) {
+        val res = weatherRepo.getWeather(city)
+        res.onSuccess {
+            currentWeather = it
+        }.onFailure {
+            errorMessage = it.message ?: "Error"
+        }
+        loading = false
     }
 }

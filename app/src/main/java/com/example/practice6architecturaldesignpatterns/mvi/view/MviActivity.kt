@@ -22,11 +22,11 @@ class MviActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                val state by viewModel.state.collectAsStateWithLifecycle()
+                val currentState by viewModel.uiState.collectAsStateWithLifecycle()
                 WeatherScreen(
-                    status = state.toStatusText(),
-                    onCitySelected = { city ->
-                        viewModel.onIntent(WeatherIntent.SelectCity(city))
+                    status = currentState.convertToText(),
+                    onCitySelected = { cityName ->
+                        viewModel.processIntent(WeatherIntent.SelectCity(cityName))
                     },
                 )
             }
@@ -34,9 +34,9 @@ class MviActivity : ComponentActivity() {
     }
 }
 
-private fun WeatherState.toStatusText(): String = when {
-    isLoading -> "Loading…"
+private fun WeatherState.convertToText(): String = when {
+    isLoading -> "Loading data..."
     error != null -> "Error: $error"
     weather != null -> "${weather.city}: ${weather.temperatureC}°C, ${weather.condition}"
-    else -> "Pick a city"
+    else -> "Select a location"
 }

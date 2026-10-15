@@ -8,16 +8,16 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class WeatherController(
-    private val model: WeatherModel,
-    private val view: WeatherView,
-    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main),
+    private val mModel: WeatherModel,
+    private val mView: WeatherView,
+    private val backgroundScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 ) {
-    fun onCitySelected(city: String) {
-        scope.launch {
-            model.startLoading()
-            view.render()
-            model.load(city)
-            view.render()
+    fun selectCity(name: String) {
+        backgroundScope.launch {
+            mModel.beginLoading()
+            mView.render()
+            mModel.fetch(name)
+            mView.render()
         }
     }
 }

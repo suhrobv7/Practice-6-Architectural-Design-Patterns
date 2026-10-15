@@ -21,19 +21,19 @@ class MvvmActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                val currentUiState by viewModel.stateFlow.collectAsStateWithLifecycle()
                 WeatherScreen(
-                    status = uiState.toStatusText(),
-                    onCitySelected = viewModel::onCitySelected,
+                    status = currentUiState.convertToStatusText(),
+                    onCitySelected = viewModel::selectCity,
                 )
             }
         }
     }
 }
 
-private fun WeatherUiState.toStatusText(): String = when (this) {
-    is WeatherUiState.Idle -> "Pick a city"
-    is WeatherUiState.Loading -> "Loading…"
+private fun WeatherUiState.convertToStatusText(): String = when (this) {
+    is WeatherUiState.Idle -> "Select a location"
+    is WeatherUiState.Loading -> "Loading data..."
     is WeatherUiState.Success -> "${weather.city}: ${weather.temperatureC}°C, ${weather.condition}"
     is WeatherUiState.Error -> "Error: $message"
 }

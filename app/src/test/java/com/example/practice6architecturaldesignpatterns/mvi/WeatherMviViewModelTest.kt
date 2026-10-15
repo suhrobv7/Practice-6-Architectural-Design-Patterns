@@ -33,8 +33,8 @@ class WeatherMviViewModelTest {
     @Test
     fun selecting_a_known_city_ends_with_weather_and_no_loading() {
         val viewModel = newViewModel()
-        viewModel.onIntent(WeatherIntent.SelectCity("Bukhara"))
-        val state = viewModel.state.value
+        viewModel.processIntent(WeatherIntent.SelectCity("Bukhara"))
+        val state = viewModel.uiState.value
         assertFalse(state.isLoading)
         assertEquals("Bukhara", state.weather?.city)
         assertNull(state.error)
@@ -43,8 +43,8 @@ class WeatherMviViewModelTest {
     @Test
     fun selecting_an_unknown_city_ends_with_error() {
         val viewModel = newViewModel()
-        viewModel.onIntent(WeatherIntent.SelectCity("Atlantis"))
-        val state = viewModel.state.value
+        viewModel.processIntent(WeatherIntent.SelectCity("Atlantis"))
+        val state = viewModel.uiState.value
         assertFalse(state.isLoading)
         assertNull(state.weather)
         assertEquals("No forecast for Atlantis", state.error)
@@ -53,9 +53,9 @@ class WeatherMviViewModelTest {
     @Test
     fun dismissing_the_error_clears_it() {
         val viewModel = newViewModel()
-        viewModel.onIntent(WeatherIntent.SelectCity("Atlantis"))
-        viewModel.onIntent(WeatherIntent.DismissError)
-        val state = viewModel.state.value
+        viewModel.processIntent(WeatherIntent.SelectCity("Atlantis"))
+        viewModel.processIntent(WeatherIntent.DismissError)
+        val state = viewModel.uiState.value
         assertNull(state.error)
     }
 }

@@ -14,27 +14,27 @@ import com.example.practice6architecturaldesignpatterns.ui.WeatherScreen
 
 class MvcActivity : ComponentActivity(), WeatherView {
     private val model = WeatherModel(WeatherModule.repository)
-    private val controller = WeatherController(model, view = this)
-    private var status by mutableStateOf("Pick a city")
+    private val controller = WeatherController(model, mView = this)
+    private var uiStatus by mutableStateOf("Select a location")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                WeatherScreen(status = status, onCitySelected = controller::onCitySelected)
+                WeatherScreen(status = uiStatus, onCitySelected = controller::selectCity)
             }
         }
     }
 
     override fun render() {
-        status = when {
-            model.isLoading -> "Loading…"
-            model.error != null -> "Error: ${model.error}"
-            model.weather != null -> {
-                val w = model.weather!!
-                "${w.city}: ${w.temperatureC}°C, ${w.condition}"
+        uiStatus = when {
+            model.loading -> "Loading data..."
+            model.errorMessage != null -> "Error: ${model.errorMessage}"
+            model.currentWeather != null -> {
+                val item = model.currentWeather!!
+                "${item.city}: ${item.temperatureC}°C, ${item.condition}"
             }
-            else -> "Pick a city"
+            else -> "Select a location"
         }
     }
 }

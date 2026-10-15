@@ -9,17 +9,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class WeatherViewModel(private val repository: WeatherRepository) : ViewModel() {
-    private val _uiState = MutableStateFlow<WeatherUiState>(WeatherUiState.Idle)
-    val uiState: StateFlow<WeatherUiState> = _uiState.asStateFlow()
+    private val _stateFlow = MutableStateFlow<WeatherUiState>(WeatherUiState.Idle)
+    val stateFlow: StateFlow<WeatherUiState> = _stateFlow.asStateFlow()
 
-    fun onCitySelected(city: String) {
-        _uiState.value = WeatherUiState.Loading
+    fun selectCity(city: String) {
+        _stateFlow.value = WeatherUiState.Loading
         viewModelScope.launch {
-            val result = repository.getWeather(city)
-            result.onSuccess { weather ->
-                _uiState.value = WeatherUiState.Success(weather)
-            }.onFailure { e ->
-                _uiState.value = WeatherUiState.Error(e.message ?: "Unknown error")
+            val response = repository.getWeather(city)
+            if (response.isSuccess) {
+                _stateFlow.value = WeatherUiState.Success(response.getOrThrow())
+            } else {
+                _stateFlow.value = WeatherUiState.Error(response.exceptionOrNull()?.message ?: "Error")
             }
         }
     }

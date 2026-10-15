@@ -13,24 +13,45 @@ fun WeatherScreen(
     onCitySelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Surface(
+        modifier = modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
-        Text(text = status, style = MaterialTheme.typography.headlineSmall)
-        Spacer(modifier = Modifier.height(32.dp))
-        val cities = listOf("Tashkent", "Samarkand", "Bukhara", "Atlantis")
-        for (city in cities) {
-            Button(
-                onClick = { onCitySelected(city) },
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp)
+                    .padding(bottom = 24.dp)
             ) {
-                Text(text = city)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = status,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+
+            val list = listOf("Tashkent", "Samarkand", "Bukhara", "Atlantis")
+            for (cityName in list) {
+                OutlinedButton(
+                    onClick = { onCitySelected(cityName) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp)
+                ) {
+                    Text(text = cityName)
+                }
             }
         }
     }
