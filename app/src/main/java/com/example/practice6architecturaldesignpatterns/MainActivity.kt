@@ -57,7 +57,9 @@ class MainActivity : ComponentActivity() {
                             Text("MVVM Pattern")
                         }
 
+
                         Button(
+
                             onClick = { startActivity(Intent(this@MainActivity, MviActivity::class.java)) },
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                         ) {
