@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Weather Patterns Launcher",
+                            text = "Weather App",
                             style = MaterialTheme.typography.headlineMedium
                         )
                         Spacer(modifier = Modifier.height(32.dp))
@@ -40,30 +40,28 @@ class MainActivity : ComponentActivity() {
                             onClick = { startActivity(Intent(this@MainActivity, MvcActivity::class.java)) },
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                         ) {
-                            Text("MVC Pattern")
+                            Text("MVC")
                         }
 
                         Button(
                             onClick = { startActivity(Intent(this@MainActivity, MvpActivity::class.java)) },
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                         ) {
-                            Text("MVP Pattern")
+                            Text("MVP")
                         }
 
                         Button(
                             onClick = { startActivity(Intent(this@MainActivity, MvvmActivity::class.java)) },
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                         ) {
-                            Text("MVVM Pattern")
+                            Text("MVVM")
                         }
 
-
                         Button(
-
                             onClick = { startActivity(Intent(this@MainActivity, MviActivity::class.java)) },
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                         ) {
-                            Text("MVI Pattern")
+                            Text("MVI")
                         }
                     }
                 }
